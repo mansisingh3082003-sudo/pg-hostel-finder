@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PG & Hostel Finder | Find Affordable Student & Working Accommodation</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-buildings-fill"></i>
+                <span>PG & Hostel Finder</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="search.html">Explore PGs</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2" id="nav-auth-container">
+                    <!-- Populated dynamically by auth.js -->
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Global Alert Container -->
+    <div class="container mt-3" id="alert-container"></div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section text-center">
+            <div class="container">
+                <span class="badge bg-white text-primary mb-3 px-3 py-2 rounded-pill fw-semibold shadow-sm">
+                    ✨ Verified Student & Professional Accommodations
+                </span>
+                <h1 class="hero-title">Find Your Perfect PG or Hostel <br>Without Any Brokerage</h1>
+                <p class="hero-subtitle">
+                    Search from thousands of verified PGs with food, Wi-Fi, AC, and daily housekeeping across Patna, Muzaffarpur, Hajipur, and top cities.
+                </p>
+            </div>
+        </section>
+
+        <!-- Search Bar Card -->
+        <div class="container">
+            <div class="search-box-card">
+                <form id="hero-search-form" class="row g-3 align-items-center">
+                    <div class="col-lg-4 col-md-6">
+                        <label class="form-label text-muted small fw-bold"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Select City</label>
+                        <select class="form-select form-select-lg" id="search-city">
+                            <option value="">All Cities</option>
+                            <option value="Patna">Patna (Boring Road, Kankarbagh)</option>
+                            <option value="Muzaffarpur">Muzaffarpur (Mithanpura, Kalambagh)</option>
+                            <option value="Hajipur">Hajipur (Station Road, Cinema Road)</option>
+                            <option value="Greater Noida">Greater Noida (Knowledge Park, Pari Chowk)</option>
+                            <option value="Bengaluru">Bengaluru (Electronic City, Koramangala)</option>
+                            <option value="Pune">Pune (Viman Nagar, Hinjawadi)</option>
+                            <option value="Delhi NCR">Delhi NCR / Gurgaon</option>
+                            <option value="Hyderabad">Hyderabad (Hitec City, Madhapur)</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label class="form-label text-muted small fw-bold"><i class="bi bi-gender-ambiguous text-primary me-1"></i>Gender Preference</label>
+                        <select class="form-select form-select-lg" id="search-gender">
+                            <option value="">Any Gender</option>
+                            <option value="BOYS">Boys Only</option>
+                            <option value="GIRLS">Girls Only</option>
+                            <option value="CO_ED">Co-Ed / Unisex</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label class="form-label text-muted small fw-bold"><i class="bi bi-currency-rupee text-success me-1"></i>Max Budget / Month</label>
+                        <select class="form-select form-select-lg" id="search-budget">
+                            <option value="">Any Budget</option>
+                            <option value="7000">Under ₹7,000</option>
+                            <option value="10000">Under ₹10,000</option>
+                            <option value="15000">Under ₹15,000</option>
+                            <option value="20000">Under ₹20,000</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 col-md-6 d-grid">
+                        <label class="form-label text-muted small fw-bold d-none d-lg-block">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold">
+                            <i class="bi bi-search me-1"></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Featured Cities Grid -->
+        <section class="py-5 mt-4">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-end mb-4">
+                    <div>
+                        <h2 class="fw-bold mb-1">Popular Student Hubs</h2>
+                        <p class="text-muted mb-0">Explore accommodations close to your university or office</p>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a href="search.html?city=Patna" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden text-white position-relative">
+                                <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=600&q=80" class="card-img" style="height: 180px; object-fit: cover;" alt="Patna">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
+                                    <h5 class="card-title fw-bold mb-0">Patna</h5>
+                                    <small class="text-light">Boring Road, Kankarbagh, Fraser Road</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a href="search.html?city=Muzaffarpur" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden text-white position-relative">
+                                <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=600&q=80" class="card-img" style="height: 180px; object-fit: cover;" alt="Muzaffarpur">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
+                                    <h5 class="card-title fw-bold mb-0">Muzaffarpur</h5>
+                                    <small class="text-light">Mithanpura, Kalambagh Road, Club Road</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a href="search.html?city=Hajipur" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden text-white position-relative">
+                                <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80" class="card-img" style="height: 180px; object-fit: cover;" alt="Hajipur">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
+                                    <h5 class="card-title fw-bold mb-0">Hajipur</h5>
+                                    <small class="text-light">Station Road, Cinema Road, Paswan Chowk</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a href="search.html?city=Greater Noida" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden text-white position-relative">
+                                <img src="https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80" class="card-img" style="height: 180px; object-fit: cover;" alt="Greater Noida">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
+                                    <h5 class="card-title fw-bold mb-0">Greater Noida</h5>
+                                    <small class="text-light">Knowledge Park, Pari Chowk, Jagat Farm</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a href="search.html?city=Bengaluru" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden text-white position-relative">
+                                <img src="https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=600&q=80" class="card-img" style="height: 180px; object-fit: cover;" alt="Bengaluru">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
+                                    <h5 class="card-title fw-bold mb-0">Bengaluru</h5>
+                                    <small class="text-light">Electronic City, BTM, Marathahalli</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a href="search.html?city=Pune" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden text-white position-relative">
+                                <img src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80" class="card-img" style="height: 180px; object-fit: cover;" alt="Pune">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
+                                    <h5 class="card-title fw-bold mb-0">Pune</h5>
+                                    <small class="text-light">Viman Nagar, Hinjewadi, Kothrud</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a href="search.html?city=Delhi NCR" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden text-white position-relative">
+                                <img src="https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=600&q=80" class="card-img" style="height: 180px; object-fit: cover;" alt="Delhi NCR">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
+                                    <h5 class="card-title fw-bold mb-0">Delhi NCR</h5>
+                                    <small class="text-light">Gurgaon, Noida, North Campus</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a href="search.html?city=Hyderabad" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden text-white position-relative">
+                                <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=600&q=80" class="card-img" style="height: 180px; object-fit: cover;" alt="Hyderabad">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(transparent, rgba(0,0,0,0.85));">
+                                    <h5 class="card-title fw-bold mb-0">Hyderabad</h5>
+                                    <small class="text-light">Hitec City, Madhapur, Gachibowli</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Properties Section -->
+        <section class="py-5 bg-white border-top border-bottom">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-end mb-4">
+                    <div>
+                        <h2 class="fw-bold mb-1">Featured PGs & Hostels</h2>
+                        <p class="text-muted mb-0">Top-rated accommodations reviewed by students</p>
+                    </div>
+                    <a href="search.html" class="btn btn-outline-primary fw-semibold">View All <i class="bi bi-arrow-right"></i></a>
+                </div>
+
+                <div class="row g-4" id="featured-properties-container">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="text-muted mt-2">Loading properties...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us / Value Proposition -->
+        <section class="py-5">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold">Why Book with PG/Hostel Finder?</h2>
+                    <p class="text-muted">Designed specifically to solve real difficulties faced when moving to a new city.</p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm p-4 h-100 rounded-4">
+                            <div class="feature-icon-box">
+                                <i class="bi bi-patch-check-fill"></i>
+                            </div>
+                            <h5 class="fw-bold">100% Verified Listings</h5>
+                            <p class="text-muted mb-0">Every PG and hostel profile is reviewed and verified. Genuine photos, exact addresses, and verified owner credentials.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm p-4 h-100 rounded-4">
+                            <div class="feature-icon-box" style="color: #0d9488; background-color: #ccfbf1;">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
+                            <h5 class="fw-bold">Zero Brokerage & Direct Contact</h5>
+                            <p class="text-muted mb-0">Say goodbye to middleman fees. Submit your booking request directly to the property owner and track its status online.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm p-4 h-100 rounded-4">
+                            <div class="feature-icon-box" style="color: #ea580c; background-color: #ffedd5;">
+                                <i class="bi bi-shield-lock-fill"></i>
+                            </div>
+                            <h5 class="fw-bold">Transparent Room Availability</h5>
+                            <p class="text-muted mb-0">Live bed and room availability indicators ensure you never waste time visiting fully-booked accommodations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action for Property Owners -->
+        <section class="py-5 bg-light border-top">
+            <div class="container">
+                <div class="bg-primary text-white rounded-4 p-5 shadow-lg position-relative overflow-hidden">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h2 class="fw-bold mb-3">Are You a PG or Hostel Owner?</h2>
+                            <p class="lead mb-0 text-white-50">
+                                List your property on our centralized platform, reach verified students and professionals, and manage booking requests effortlessly.
+                            </p>
+                        </div>
+                        <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                            <a href="register.html?role=OWNER" class="btn btn-warning btn-lg fw-bold px-4 shadow">
+                                Register as Owner <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5 class="text-white fw-bold"><i class="bi bi-buildings-fill me-2 text-primary"></i>PG & Hostel Finder</h5>
+                    <p class="small text-muted mt-2">
+                        A centralized platform solving accommodation difficulties for students and working professionals across India.
+                    </p>
+                </div>
+                <div class="col-md-2 col-6">
+                    <h6 class="text-white fw-semibold mb-3">Top Cities</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="search.html?city=Patna">Patna</a></li>
+                        <li class="mb-2"><a href="search.html?city=Muzaffarpur">Muzaffarpur</a></li>
+                        <li class="mb-2"><a href="search.html?city=Hajipur">Hajipur</a></li>
+                        <li class="mb-2"><a href="search.html?city=Bengaluru">Bengaluru</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 col-6">
+                    <h6 class="text-white fw-semibold mb-3">Portals</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="dashboard-user.html">Student Dashboard</a></li>
+                        <li class="mb-2"><a href="dashboard-owner.html">Property Owner Portal</a></li>
+                        <li class="mb-2"><a href="dashboard-admin.html">Admin Command Center</a></li>
+                        <li class="mb-2"><a href="h2-console" target="_blank">H2 Database Console</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-white fw-semibold mb-3">Quick Demo Logins</h6>
+                    <p class="small text-muted mb-1"><strong>Admin:</strong> admin@pghfinder.com</p>
+                    <p class="small text-muted mb-1"><strong>Owner:</strong> rajesh.owner@example.com</p>
+                    <p class="small text-muted mb-0"><strong>Student:</strong> rahul.student@example.com</p>
+                </div>
+            </div>
+            <hr class="border-secondary my-4">
+            <div class="text-center small text-muted">
+                &copy; 2026 PG/Hostel Finder & Booking System. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js?v=9"></script>
+    <script src="js/auth.js?v=9"></script>
+    <script src="js/main.js?v=9"></script>
+</body>
+</html>

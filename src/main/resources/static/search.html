@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search & Filter PGs/Hostels | PG & Hostel Finder</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-buildings-fill"></i>
+                <span>PG & Hostel Finder</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="search.html">Explore PGs</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2" id="nav-auth-container">
+                    <!-- Populated dynamically by auth.js -->
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Global Alert Container -->
+    <div class="container mt-3" id="alert-container"></div>
+
+    <main class="py-4">
+        <div class="container">
+            <!-- Search bar banner -->
+            <div class="card border-0 shadow-sm p-3 mb-4 rounded-4 bg-white">
+                <form id="filter-form" class="row g-2 align-items-center">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text" id="filter-keyword" class="form-control border-start-0" placeholder="Search by PG name, locality or street...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select id="filter-city" class="form-select">
+                            <option value="">All Cities</option>
+                            <option value="Patna">Patna</option>
+                            <option value="Muzaffarpur">Muzaffarpur</option>
+                            <option value="Hajipur">Hajipur</option>
+                            <option value="Greater Noida">Greater Noida</option>
+                            <option value="Bengaluru">Bengaluru</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Delhi NCR">Delhi NCR</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select id="sort-by" class="form-select">
+                            <option value="default">Sort by: Default</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-primary fw-semibold"><i class="bi bi-funnel-fill me-1"></i> Apply</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row g-4">
+                <!-- Filter Sidebar -->
+                <div class="col-lg-3">
+                    <div class="card border-0 shadow-sm p-4 rounded-4 bg-white sticky-top" style="top: 90px;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0">Filters</h5>
+                            <button type="button" id="btn-reset-filters" class="btn btn-sm btn-link text-decoration-none p-0 text-muted">Reset All</button>
+                        </div>
+
+                        <!-- Gender Preference -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Gender Preference</label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-gender" type="radio" name="genderFilter" id="gender-all" value="" checked>
+                                <label class="form-check-label" for="gender-all">All PGs</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-gender" type="radio" name="genderFilter" id="gender-boys" value="BOYS">
+                                <label class="form-check-label" for="gender-boys">Boys Only</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-gender" type="radio" name="genderFilter" id="gender-girls" value="GIRLS">
+                                <label class="form-check-label" for="gender-girls">Girls Only</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-gender" type="radio" name="genderFilter" id="gender-coed" value="CO_ED">
+                                <label class="form-check-label" for="gender-coed">Co-ed / Unisex</label>
+                            </div>
+                        </div>
+
+                        <!-- Room Sharing Filter -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Room Sharing</label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-room-type" type="radio" name="roomTypeFilter" id="room-all" value="" checked>
+                                <label class="form-check-label" for="room-all">Any Room Type</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-room-type" type="radio" name="roomTypeFilter" id="room-single" value="SINGLE">
+                                <label class="form-check-label" for="room-single"><i class="bi bi-person-fill me-1 text-primary"></i>Single Room</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-room-type" type="radio" name="roomTypeFilter" id="room-double" value="DOUBLE">
+                                <label class="form-check-label" for="room-double"><i class="bi bi-people-fill me-1 text-success"></i>Double Sharing</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input filter-room-type" type="radio" name="roomTypeFilter" id="room-triple" value="TRIPLE">
+                                <label class="form-check-label" for="room-triple"><i class="bi bi-people me-1 text-info"></i>Triple / 3+ Sharing</label>
+                            </div>
+                        </div>
+
+                        <!-- AC Fast Toggle Switch -->
+                        <div class="mb-4 p-3 bg-light rounded-3 border">
+                            <div class="form-check form-switch mb-0">
+                                <input class="form-check-input" type="checkbox" id="filter-ac-only" role="switch">
+                                <label class="form-check-label fw-bold text-dark small" for="filter-ac-only">
+                                    <i class="bi bi-snow text-info me-1"></i>AC Rooms Only
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-1" style="font-size: 0.76rem;">Only show PGs with Air Conditioning</small>
+                        </div>
+
+                        <!-- Budget Range -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between">
+                                <label class="form-label fw-bold small text-muted text-uppercase">Max Budget / Month</label>
+                                <span class="fw-bold text-primary" id="budget-display">₹30,000</span>
+                            </div>
+                            <input type="range" class="form-range" id="filter-max-rent" min="2000" max="30000" step="500" value="30000">
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>₹2k</span>
+                                <span>₹15k</span>
+                                <span>₹30k</span>
+                            </div>
+                        </div>
+
+                        <!-- Facilities / Amenities -->
+                        <div>
+                            <label class="form-label fw-bold small text-muted text-uppercase">Popular Amenities</label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input amenity-checkbox" type="checkbox" value="Wi-Fi" id="amenity-wifi">
+                                <label class="form-check-label" for="amenity-wifi"><i class="bi bi-wifi me-1 text-primary"></i>Wi-Fi</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input amenity-checkbox" type="checkbox" value="Food" id="amenity-food">
+                                <label class="form-check-label" for="amenity-food"><i class="bi bi-cup-hot me-1 text-warning"></i>Food / Meals</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input amenity-checkbox" type="checkbox" value="AC" id="amenity-ac">
+                                <label class="form-check-label" for="amenity-ac"><i class="bi bi-snow me-1 text-info"></i>Air Conditioning</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input amenity-checkbox" type="checkbox" value="Power Backup" id="amenity-power">
+                                <label class="form-check-label" for="amenity-power"><i class="bi bi-lightning-charge me-1 text-warning"></i>Power Backup</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input amenity-checkbox" type="checkbox" value="CCTV" id="amenity-cctv">
+                                <label class="form-check-label" for="amenity-cctv"><i class="bi bi-camera-video me-1 text-danger"></i>CCTV Security</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input amenity-checkbox" type="checkbox" value="Bathroom" id="amenity-bath">
+                                <label class="form-check-label" for="amenity-bath"><i class="bi bi-droplet me-1 text-primary"></i>Attached Washroom</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input amenity-checkbox" type="checkbox" value="Laundry" id="amenity-laundry">
+                                <label class="form-check-label" for="amenity-laundry"><i class="bi bi-water me-1 text-secondary"></i>Laundry Service</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Column -->
+                <div class="col-lg-9">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted" id="results-count">Searching properties...</span>
+                    </div>
+
+                    <div class="row g-4" id="search-results-container">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="text-muted mt-2">Loading properties...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js?v=9"></script>
+    <script src="js/auth.js?v=9"></script>
+    <script src="js/search.js?v=9"></script>
+</body>
+</html>

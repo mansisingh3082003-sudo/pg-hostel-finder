@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | PG & Hostel Finder</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .payment-method-btn {
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            width: 100%;
+        }
+        .payment-method-btn:hover {
+            border-color: #0d6efd;
+            background: #f8fbff;
+        }
+        .payment-method-btn.active {
+            border-color: #0d6efd;
+            background: #eff6ff;
+            box-shadow: 0 0 0 1px #0d6efd;
+        }
+        .upi-app-chip {
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            background: white;
+        }
+        .upi-app-chip:hover, .upi-app-chip.selected {
+            border-color: #0d6efd;
+            background: #eef2ff;
+            color: #0d6efd;
+        }
+        .receipt-paper {
+            background: #ffffff;
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+        }
+        .receipt-stamp {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            border: 3px solid #16a34a;
+            color: #16a34a;
+            font-weight: 900;
+            padding: 4px 16px;
+            border-radius: 8px;
+            transform: rotate(-10deg);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #receiptModal .modal-content, #receiptModal .modal-content * {
+                visibility: visible;
+            }
+            #receiptModal .modal-dialog {
+                max-width: 100% !important;
+                margin: 0 !important;
+            }
+            #receiptModal .modal-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100% !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Header / Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-buildings-fill"></i>
+                <span>PG & Hostel Finder</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="search.html">Explore PGs</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="dashboard-user.html">My Bookings</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2" id="nav-auth-container">
+                    <!-- Populated dynamically by auth.js -->
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Global Alert Container -->
+    <div class="container mt-3" id="alert-container"></div>
+
+    <main class="py-4">
+        <div class="container">
+            <!-- Welcome Header -->
+            <div class="card border-0 shadow-sm p-4 rounded-4 bg-white mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle bg-primary-subtle text-primary p-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 1.8rem;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <div>
+                                <h3 class="fw-bold mb-0" id="user-display-name">Loading...</h3>
+                                <p class="text-muted small mb-0" id="user-display-email">student@example.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <a href="search.html" class="btn btn-primary fw-semibold">
+                            <i class="bi bi-search me-1"></i> Search More PGs
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking History & Status Section -->
+            <div class="card border-0 shadow-sm rounded-4 bg-white p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-clock-history text-primary me-2"></i>My Accommodation Bookings</h5>
+                    <span class="text-muted small" id="bookings-count">0 Bookings</span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>PG / Hostel</th>
+                                <th>Room Requested</th>
+                                <th>Check-in Date</th>
+                                <th>Duration</th>
+                                <th>Booking Status</th>
+                                <th>Payment Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-table-body">
+                            <tr>
+                                <td colspan="8" class="text-center py-4 text-muted">
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                    Loading your bookings...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal 1: Payment Gateway (UPI / QR / Card) -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow overflow-hidden">
+                <!-- Gateway Header -->
+                <div class="bg-primary text-white p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <i class="bi bi-shield-check fs-4 text-warning"></i>
+                            <h5 class="fw-bold mb-0">Secure Rent &amp; Token Checkout</h5>
+                        </div>
+                        <p class="small text-white-50 mb-0" id="pay-modal-prop-name">Property Name</p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-white text-primary fw-bold fs-5 px-3 py-2" id="pay-modal-amount-badge">₹0</span>
+                        <div class="small text-white-50 mt-1">100% Encrypted Payment</div>
+                    </div>
+                </div>
+
+                <div class="modal-body p-4 bg-light">
+                    <!-- Amount Option Selector -->
+                    <div class="card border-0 shadow-sm rounded-3 p-3 mb-4 bg-white">
+                        <label class="form-label fw-bold mb-2">Select Payment Type:</label>
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <div class="form-check p-3 border rounded-3 h-100" style="cursor: pointer;" onclick="setPaymentAmountType('TOKEN')">
+                                    <input class="form-check-input" type="radio" name="paymentAmountChoice" id="payChoiceToken" value="TOKEN" checked>
+                                    <label class="form-check-label fw-semibold ms-2" for="payChoiceToken">
+                                        Token Advance Booking (₹1,000)
+                                        <div class="small text-muted fw-normal">Reserve your bed now. Pay remaining at check-in.</div>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check p-3 border rounded-3 h-100" style="cursor: pointer;" onclick="setPaymentAmountType('FULL')">
+                                    <input class="form-check-input" type="radio" name="paymentAmountChoice" id="payChoiceFull" value="FULL">
+                                    <label class="form-check-label fw-semibold ms-2" for="payChoiceFull">
+                                        Full 1st Month Rent (<span id="pay-full-rent-amount">₹0</span>)
+                                        <div class="small text-muted fw-normal">Zero pending amount at arrival. Complete confirmation.</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Left: Payment Methods Tabs -->
+                        <div class="col-md-5">
+                            <h6 class="fw-bold mb-3 text-secondary text-uppercase small">Payment Methods</h6>
+                            <div class="d-flex flex-column gap-2">
+                                <button type="button" class="payment-method-btn active" id="btn-method-upi" onclick="selectPaymentMethod('UPI')">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <i class="bi bi-qr-code-scan fs-3 text-primary"></i>
+                                        <div>
+                                            <div class="fw-bold">UPI / QR Code</div>
+                                            <small class="text-muted">GPay, PhonePe, Paytm, BHIM</small>
+                                        </div>
+                                    </div>
+                                </button>
+                                <button type="button" class="payment-method-btn" id="btn-method-card" onclick="selectPaymentMethod('CARD')">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <i class="bi bi-credit-card-2-front fs-3 text-success"></i>
+                                        <div>
+                                            <div class="fw-bold">Debit / Credit Card</div>
+                                            <small class="text-muted">Visa, Mastercard, RuPay</small>
+                                        </div>
+                                    </div>
+                                </button>
+                                <button type="button" class="payment-method-btn" id="btn-method-netbanking" onclick="selectPaymentMethod('NETBANKING')">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <i class="bi bi-bank fs-3 text-warning"></i>
+                                        <div>
+                                            <div class="fw-bold">Net Banking</div>
+                                            <small class="text-muted">SBI, HDFC, ICICI, Axis</small>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right: Selected Method Input Area -->
+                        <div class="col-md-7">
+                            <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100">
+                                <!-- Section 1: UPI / QR -->
+                                <div id="section-pay-upi">
+                                    <div class="text-center mb-3">
+                                        <h6 class="fw-bold mb-1">Scan QR Code to Pay</h6>
+                                        <p class="text-muted small">Scan with any UPI app on your phone</p>
+                                        <!-- Simulated Dynamic QR Code SVG -->
+                                        <div class="d-inline-block p-3 border rounded-3 bg-white shadow-sm mb-2" id="simulated-qr-container">
+                                            <svg width="150" height="150" viewBox="0 0 100 100">
+                                                <rect width="100" height="100" fill="#ffffff"/>
+                                                <!-- Outer square 1 -->
+                                                <rect x="5" y="5" width="30" height="30" fill="#0f172a" rx="4"/>
+                                                <rect x="10" y="10" width="20" height="20" fill="#ffffff" rx="2"/>
+                                                <rect x="15" y="15" width="10" height="10" fill="#0d6efd" rx="2"/>
+                                                <!-- Outer square 2 -->
+                                                <rect x="65" y="5" width="30" height="30" fill="#0f172a" rx="4"/>
+                                                <rect x="70" y="10" width="20" height="20" fill="#ffffff" rx="2"/>
+                                                <rect x="75" y="15" width="10" height="10" fill="#0d6efd" rx="2"/>
+                                                <!-- Outer square 3 -->
+                                                <rect x="5" y="65" width="30" height="30" fill="#0f172a" rx="4"/>
+                                                <rect x="10" y="70" width="20" height="20" fill="#ffffff" rx="2"/>
+                                                <rect x="15" y="75" width="10" height="10" fill="#0d6efd" rx="2"/>
+                                                <!-- Data pattern blocks -->
+                                                <rect x="42" y="10" width="8" height="8" fill="#0f172a"/>
+                                                <rect x="54" y="10" width="6" height="6" fill="#0f172a"/>
+                                                <rect x="42" y="22" width="6" height="6" fill="#0f172a"/>
+                                                <rect x="52" y="22" width="8" height="8" fill="#0f172a"/>
+                                                <rect x="42" y="42" width="16" height="16" fill="#0d6efd" rx="2"/>
+                                                <rect x="10" y="45" width="8" height="8" fill="#0f172a"/>
+                                                <rect x="22" y="45" width="6" height="8" fill="#0f172a"/>
+                                                <rect x="68" y="45" width="8" height="6" fill="#0f172a"/>
+                                                <rect x="80" y="45" width="10" height="8" fill="#0f172a"/>
+                                                <rect x="45" y="68" width="8" height="8" fill="#0f172a"/>
+                                                <rect x="58" y="68" width="6" height="6" fill="#0f172a"/>
+                                                <rect x="70" y="68" width="8" height="10" fill="#0f172a"/>
+                                                <rect x="82" y="68" width="8" height="8" fill="#0f172a"/>
+                                                <rect x="45" y="82" width="12" height="8" fill="#0f172a"/>
+                                                <rect x="62" y="82" width="8" height="8" fill="#0f172a"/>
+                                                <rect x="76" y="82" width="14" height="8" fill="#0f172a"/>
+                                            </svg>
+                                        </div>
+                                        <div class="small text-muted"><i class="bi bi-clock me-1"></i>QR Code expires in <span class="fw-bold text-danger" id="qr-timer">04:59</span></div>
+                                    </div>
+
+                                    <div class="text-center mb-3">
+                                        <span class="small text-muted fw-bold d-block mb-2 text-uppercase">Or Tap Your UPI App</span>
+                                        <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                            <span class="upi-app-chip selected" onclick="selectUpiApp(this, 'Google Pay')"><i class="bi bi-google text-primary me-1"></i>Google Pay</span>
+                                            <span class="upi-app-chip" onclick="selectUpiApp(this, 'PhonePe')"><i class="bi bi-phone-fill text-purple me-1"></i>PhonePe</span>
+                                            <span class="upi-app-chip" onclick="selectUpiApp(this, 'Paytm')"><i class="bi bi-wallet2 text-info me-1"></i>Paytm</span>
+                                            <span class="upi-app-chip" onclick="selectUpiApp(this, 'BHIM UPI')"><i class="bi bi-upc-scan text-success me-1"></i>BHIM</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-semibold">Or Enter UPI ID</label>
+                                        <input type="text" class="form-control form-control-sm" id="pay-upi-id" placeholder="e.g. mobileNumber@upi" value="student@okaxis">
+                                    </div>
+                                </div>
+
+                                <!-- Section 2: Card -->
+                                <div id="section-pay-card" style="display: none;">
+                                    <h6 class="fw-bold mb-3">Enter Card Details</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-semibold">Card Number</label>
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+                                            <input type="text" class="form-control" id="pay-card-num" placeholder="4532 •••• •••• 8821" value="4532 8921 4410 8821">
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-6">
+                                            <label class="form-label small fw-semibold">Expiry Date</label>
+                                            <input type="text" class="form-control form-control-sm" id="pay-card-exp" placeholder="MM/YY" value="09/29">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small fw-semibold">CVV</label>
+                                            <input type="password" class="form-control form-control-sm" id="pay-card-cvv" placeholder="•••" value="821" maxlength="4">
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="form-label small fw-semibold">Cardholder Name</label>
+                                        <input type="text" class="form-control form-control-sm" id="pay-card-name" placeholder="Name on card" value="Mansi Singh">
+                                    </div>
+                                </div>
+
+                                <!-- Section 3: Net Banking -->
+                                <div id="section-pay-netbanking" style="display: none;">
+                                    <h6 class="fw-bold mb-3">Select Your Bank</h6>
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-6">
+                                            <div class="border rounded-3 p-2 text-center" style="cursor: pointer;">
+                                                <i class="bi bi-bank fs-4 text-primary d-block mb-1"></i>
+                                                <small class="fw-bold">State Bank of India</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="border rounded-3 p-2 text-center" style="cursor: pointer;">
+                                                <i class="bi bi-bank2 fs-4 text-danger d-block mb-1"></i>
+                                                <small class="fw-bold">HDFC Bank</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="border rounded-3 p-2 text-center" style="cursor: pointer;">
+                                                <i class="bi bi-building fs-4 text-warning d-block mb-1"></i>
+                                                <small class="fw-bold">ICICI Bank</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="border rounded-3 p-2 text-center" style="cursor: pointer;">
+                                                <i class="bi bi-bank fs-4 text-success d-block mb-1"></i>
+                                                <small class="fw-bold">Axis Bank</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gateway Footer with Pay Button -->
+                <div class="modal-footer bg-white p-3 d-flex justify-content-between">
+                    <button type="button" class="btn btn-light border px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success btn-lg px-5 fw-bold" id="btn-submit-payment" onclick="processPayment()">
+                        <i class="bi bi-lock-fill me-1"></i> Pay <span id="pay-btn-amount-display">₹1,000</span> Securely
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Official Printable Invoice & Booking Voucher -->
+    <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header border-0 pb-0 no-print">
+                    <h5 class="modal-title fw-bold">Official Booking Voucher &amp; Payment Receipt</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4">
+                    <div class="receipt-paper" id="printable-receipt-card">
+                        <!-- Verification Stamp -->
+                        <div class="receipt-stamp">PAID &amp; CONFIRMED</div>
+
+                        <!-- Brand Header -->
+                        <div class="d-flex justify-content-between align-items-start border-bottom pb-4 mb-4">
+                            <div>
+                                <h3 class="fw-bold text-primary mb-1">
+                                    <i class="bi bi-buildings-fill me-2"></i>PG &amp; Hostel Finder
+                                </h3>
+                                <p class="text-muted small mb-0">Verified Student Housing &amp; Paying Guest Booking Platform</p>
+                                <p class="text-muted small mb-0">Support: support@pghfinder.com | +91 98765 43210</p>
+                            </div>
+                            <div class="text-md-end mt-3 mt-md-0">
+                                <span class="badge bg-dark text-white px-3 py-2 fs-6" id="rcpt-inv-num">#INV-2026-0001</span>
+                                <div class="text-muted small mt-1" id="rcpt-date-time">Date: 03 Oct 2026</div>
+                            </div>
+                        </div>
+
+                        <!-- 2-Column Info Grid: Student & Property -->
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="bg-light p-3 rounded-3 h-100">
+                                    <span class="text-muted small fw-bold text-uppercase d-block mb-1">Tenant Details (Billed To)</span>
+                                    <h5 class="fw-bold mb-1" id="rcpt-student-name">Mansi Singh</h5>
+                                    <p class="text-muted small mb-1" id="rcpt-student-email"><i class="bi bi-envelope me-1"></i>salonikumari1562001@gmail.com</p>
+                                    <p class="text-muted small mb-0" id="rcpt-student-phone"><i class="bi bi-telephone me-1"></i>9876543211</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="bg-light p-3 rounded-3 h-100">
+                                    <span class="text-muted small fw-bold text-uppercase d-block mb-1">Accommodation Details</span>
+                                    <h5 class="fw-bold mb-1 text-primary" id="rcpt-prop-name">Puja Girls PG</h5>
+                                    <p class="text-muted small mb-1" id="rcpt-prop-address"><i class="bi bi-geo-alt me-1"></i>Beta 1, B-Block, Near Jagat Farm Market</p>
+                                    <p class="text-muted small mb-0" id="rcpt-prop-city"><i class="bi bi-building me-1"></i>Greater Noida, Uttar Pradesh</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Itemized Payment Table -->
+                        <div class="table-responsive mb-4">
+                            <table class="table table-bordered align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Room Type / Inventory</th>
+                                        <th>Check-in Date</th>
+                                        <th>Duration</th>
+                                        <th class="text-end">Amount Paid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="fw-bold" id="rcpt-item-desc">Booking Token &amp; Advance Rent</div>
+                                            <small class="text-muted" id="rcpt-booking-id">Booking ID: #BK-1</small>
+                                        </td>
+                                        <td id="rcpt-room-info">Double Sharing (Room 101)</td>
+                                        <td id="rcpt-checkin">04 Oct 2026</td>
+                                        <td id="rcpt-duration">3 Months</td>
+                                        <td class="text-end fw-bold text-success fs-6" id="rcpt-amount-table">₹1,000</td>
+                                    </tr>
+                                    <tr class="table-light">
+                                        <td colspan="4" class="text-end fw-bold">Platform Convenience Fee:</td>
+                                        <td class="text-end fw-bold text-muted">₹0 (Waived)</td>
+                                    </tr>
+                                    <tr class="table-light">
+                                        <td colspan="4" class="text-end fw-bold fs-6">Grand Total Received:</td>
+                                        <td class="text-end fw-bold fs-5 text-primary" id="rcpt-grand-total">₹1,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Transaction Reference Info -->
+                        <div class="row g-3 p-3 bg-light rounded-3 mb-4 small">
+                            <div class="col-md-4">
+                                <span class="text-muted d-block">Transaction ID:</span>
+                                <strong class="font-monospace text-dark" id="rcpt-txn-id">TXN_1727952819</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="text-muted d-block">Payment Mode:</span>
+                                <strong class="text-dark" id="rcpt-pay-method">UPI (Google Pay)</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="text-muted d-block">Payment Status:</span>
+                                <span class="badge bg-success">SUCCESSFUL / CAPTURED</span>
+                            </div>
+                        </div>
+
+                        <!-- Check-in Terms & Guidelines -->
+                        <div class="p-3 border rounded-3 small text-muted">
+                            <strong class="text-dark d-block mb-1"><i class="bi bi-info-circle-fill text-primary me-1"></i>Check-in Instructions &amp; Checklist:</strong>
+                            <ul class="mb-0 ps-3">
+                                <li>Please show this digital or printed voucher to the property manager during arrival.</li>
+                                <li>Carry original Government ID proof (Aadhaar Card / Voter ID / Passport) for verification.</li>
+                                <li>Remaining balance (if paid as token) can be cleared directly at property during room handover.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 p-3 bg-light no-print d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary px-4 fw-semibold" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary px-4 fw-bold" onclick="printReceipt()">
+                        <i class="bi bi-printer-fill me-1"></i> Print / Save as PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js?v=14"></script>
+    <script src="js/auth.js?v=14"></script>
+    <script src="js/user-dashboard.js?v=14"></script>
+</body>
+</html>

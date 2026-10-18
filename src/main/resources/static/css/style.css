@@ -1,0 +1,257 @@
+/* ===================================================================
+   PG & HOSTEL FINDER - MAIN STYLESHEET
+   Clean, modern, accessible design with vibrant accents
+   =================================================================== */
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #eff6ff;
+    --secondary: #0d9488;
+    --accent: #f59e0b;
+    --dark: #0f172a;
+    --light-bg: #f8fafc;
+    --card-border: #e2e8f0;
+    --text-muted: #64748b;
+    --radius: 12px;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--light-bg);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.35rem;
+    color: var(--primary) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link {
+    font-weight: 500;
+    color: #334155 !important;
+    transition: color 0.2s;
+}
+
+.navbar .nav-link:hover, .navbar .nav-link.active {
+    color: var(--primary) !important;
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--primary) !important;
+    color: #ffffff !important;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #0d9488 100%);
+    color: white;
+    padding: 70px 0 90px;
+    position: relative;
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 15px auto 30px;
+}
+
+/* Search Card */
+.search-box-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    margin-top: -45px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Property Cards */
+.property-card {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--card-border);
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.property-img-wrapper {
+    position: relative;
+    height: 210px;
+    overflow: hidden;
+    background-color: #cbd5e1;
+}
+
+.property-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.property-card:hover .property-img-wrapper img {
+    transform: scale(1.05);
+}
+
+.gender-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-boys { background-color: #dbeafe; color: #1e40af; }
+.badge-girls { background-color: #fce7f3; color: #be185d; }
+.badge-coed { background-color: #e0e7ff; color: #4338ca; }
+
+.price-tag {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(15, 23, 42, 0.85);
+    color: white;
+    backdrop-filter: blur(4px);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.amenity-tag {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+
+/* Feature Badges */
+.feature-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+    background-color: var(--primary-light);
+    color: var(--primary);
+}
+
+/* Room Cards in Details Page */
+.room-selection-card {
+    border: 2px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.room-selection-card:hover, .room-selection-card.selected {
+    border-color: var(--primary);
+    background-color: var(--primary-light);
+}
+
+/* Dashboard Badges */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+.status-PENDING { background-color: #fef3c7; color: #b45309; }
+.status-APPROVED { background-color: #dcfce7; color: #15803d; }
+.status-REJECTED { background-color: #fee2e2; color: #b91c1c; }
+.status-CANCELLED { background-color: #f1f5f9; color: #64748b; }
+
+/* Quick Login Pills */
+.quick-login-btn {
+    border: 1px dashed #cbd5e1;
+    background: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quick-login-btn:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Footer */
+footer {
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 40px 0 20px;
+    margin-top: auto;
+}
+
+footer a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+footer a:hover {
+    color: white;
+}
+
+/* WhatsApp Action Button */
+.btn-whatsapp {
+    background-color: #25D366;
+    border-color: #25D366;
+    color: #ffffff !important;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+.btn-whatsapp:hover {
+    background-color: #1eb857;
+    border-color: #1eb857;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+}
